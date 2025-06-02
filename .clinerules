@@ -1,0 +1,9 @@
+# ADDITIONAL IMPORTANT RULES
+
+- IMPORTANT: When you think you want to run the app and use the web browser - think again! Instead of always needing to use a web browser to debug the logic, calculations and outputs in the applications UI - you should ask the user to load the app and provide the debug output information as this is far more efficient. If you think you really do have a good reason to browse to the application instead of using the debug information that the user can provide - first check with the user to see if this is a good idea.
+- IMPORTANT: Do not try to run the app (pnpm dev or similar) unless the user has told you to - instead ask the user to do this and report back with the information you need.
+
+## ADDITIONAL TESTING RULES
+
+- IMPORTANT: When adding new functionality or calculations ensure you create a unit test for them.
+- IMPORTANT: After completing the tasks the user has requested you MUST run the tests (`pnpm test`) to ensure they all pass.

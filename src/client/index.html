@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Calculate the costs and benefits of using agentic coding in your development projects" />
+    <meta name="theme-color" content="#1d4ed8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNiIgZmlsbD0iIzFENEVEOCIvPjxwYXRoIGQ9Ik0xNy41IDEwQzE3LjUgOS4xNzE1NyAxNi44Mjg0IDguNSAxNiA4LjVDMTUuMTcxNiA4LjUgMTQuNSA5LjE3MTU3IDE0LjUgMTBNMTcuNSAxMEMxNy41IDEwLjgyODQgMTYuODI4NCAxMS41IDE2IDExLjVIMTQuNU0xNy41IDEwSDE5TTE0LjUgMTBIMTNNMTYgMTEuNVYxM00xNiAxNVYxNi41TTE0LjUgMjJDMTQuNSAyMi44Mjg0IDE1LjE3MTYgMjMuNSAxNiAyMy41QzE2LjgyODQgMjMuNSAxNy41IDIyLjgyODQgMTcuNSAyMk0xNC41IDIyQzE0LjUgMjEuMTcxNiAxNS4xNzE2IDIwLjUgMTYgMjAuNUgxNy41TTE0LjUgMjJIMTNNMTcuNSAyMkgxOU0xNiAyMC41VjE5TTE2IDE3VjE1LjUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTExIDE0TDggMTZMMTEgMThNMjEgMTRMMjQgMTZMMjEgMTgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+" />
+
+    <title>Agentic Cost Calculator</title>
+
+    <!-- Loading state styling -->
+    <style>
+      #root:empty {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f9fafb;
+      }
+
+      #root:empty:before {
+        content: '';
+        width: 50px;
+        height: 50px;
+        border: 3px solid #e5e7eb;
+        border-radius: 50%;
+        border-top-color: #3b82f6;
+        animation: spinner 1s linear infinite;
+      }
+
+      @keyframes spinner {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+
+    <!-- Font preload -->
+    <link
+      rel="preload"
+      href="https://rsms.me/inter/inter.css"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    </noscript>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+
+    <!-- Fallback for JavaScript disabled -->
+    <noscript>
+      <div style="padding: 2rem; text-align: center;">
+        <h1>JavaScript Required</h1>
+        <p>
+          Please enable JavaScript to use the Agentic Cost Calculator.
+          This tool requires JavaScript to perform calculations and display results.
+        </p>
+      </div>
+    </noscript>
+  </body>
+</html>

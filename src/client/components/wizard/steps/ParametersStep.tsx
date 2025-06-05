@@ -185,7 +185,7 @@ export const ParametersStep: React.FC = () => {
     >
       <div className="space-y-6">
         {/* Project Information */}
-        <div>
+        <div data-testid="project-details-form">
           <h4 className="text-base font-medium text-gray-900 mb-3">Project Information</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>

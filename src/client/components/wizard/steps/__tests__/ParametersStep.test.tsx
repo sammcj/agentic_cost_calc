@@ -6,12 +6,12 @@ import { WizardProvider } from '../../WizardProvider';
 // Mock useCalculatorForm to provide controlled state
 const mockUseCalculatorForm = jest.fn();
 
-jest.mock('../../../hooks/useCalculatorForm', () => ({
+jest.mock('../../../../hooks/useCalculatorForm', () => ({
   useCalculatorForm: () => mockUseCalculatorForm()
 }));
 
 // Mock the form components with simple implementations
-jest.mock('../../inputs/ProjectParametersForm', () => ({
+jest.mock('../../../../components/inputs/ProjectParametersForm', () => ({
   ProjectParametersForm: ({ value, onChange }: any) => (
     <div data-testid="project-params-form">
       Project Parameters Form
@@ -24,25 +24,25 @@ jest.mock('../../inputs/ProjectParametersForm', () => ({
   ),
 }));
 
-jest.mock('../../inputs/TeamParametersForm', () => ({
+jest.mock('../../../../components/inputs/TeamParametersForm', () => ({
   TeamParametersForm: () => (
     <div data-testid="team-params-form">Team Parameters Form</div>
   ),
 }));
 
-jest.mock('../../inputs/ProductParametersForm', () => ({
+jest.mock('../../../../components/inputs/ProductParametersForm', () => ({
   ProductParametersForm: () => (
     <div data-testid="product-params-form">Product Parameters Form</div>
   ),
 }));
 
-jest.mock('../../inputs/GlobalParametersForm', () => ({
+jest.mock('../../../../components/inputs/GlobalParametersForm', () => ({
   GlobalParametersForm: () => (
     <div data-testid="global-params-form">Global Parameters Form</div>
   ),
 }));
 
-jest.mock('../../inputs/ProjectDetailsForm', () => ({
+jest.mock('../../../../components/inputs/ProjectDetailsForm', () => ({
   ProjectDetailsForm: ({ value, onChange }: any) => (
     <div data-testid="project-details-form">
       Project Details Form
@@ -107,6 +107,10 @@ describe('ParametersStep', () => {
 
       render(<ParametersStepWrapper />);
 
+      // Expand "Advanced Project Settings" section to make project-params-form visible
+      fireEvent.click(screen.getByRole('button', { name: /Advanced Project Settings/i }));
+      fireEvent.click(screen.getByRole('button', { name: /Global Calculation Settings/i }));
+
       expect(screen.getByTestId('project-details-form')).toBeInTheDocument();
       expect(screen.getByTestId('project-params-form')).toBeInTheDocument();
       expect(screen.getByTestId('global-params-form')).toBeInTheDocument();
@@ -132,6 +136,11 @@ describe('ParametersStep', () => {
       });
 
       render(<ParametersStepWrapper />);
+
+      // Expand sections to make forms visible
+      fireEvent.click(screen.getByRole('button', { name: /Advanced Team Settings/i }));
+      fireEvent.click(screen.getByRole('button', { name: /Product Integration Settings/i }));
+      fireEvent.click(screen.getByRole('button', { name: /Global Calculation Settings/i }));
 
       expect(screen.getByTestId('project-details-form')).toBeInTheDocument();
       expect(screen.getByTestId('team-params-form')).toBeInTheDocument();
@@ -160,6 +169,12 @@ describe('ParametersStep', () => {
 
       render(<ParametersStepWrapper />);
 
+      // Expand sections to make forms visible
+      fireEvent.click(screen.getByRole('button', { name: /Advanced Project Settings/i }));
+      fireEvent.click(screen.getByRole('button', { name: /Advanced Team Settings/i }));
+      fireEvent.click(screen.getByRole('button', { name: /Product Integration Settings/i }));
+      fireEvent.click(screen.getByRole('button', { name: /Global Calculation Settings/i }));
+
       expect(screen.getByTestId('project-details-form')).toBeInTheDocument();
       expect(screen.getByTestId('project-params-form')).toBeInTheDocument();
       expect(screen.getByTestId('team-params-form')).toBeInTheDocument();
@@ -172,21 +187,22 @@ describe('ParametersStep', () => {
     it('should display smart defaults information panel', () => {
       render(<ParametersStepWrapper />);
 
-      expect(screen.getByText('Smart Defaults Applied')).toBeInTheDocument();
-      expect(screen.getByText('Parameters have been pre-configured based on your selected template. You can modify any values as needed.')).toBeInTheDocument();
+      expect(screen.getByText((content) => content.includes('Smart Configuration Applied'))).toBeInTheDocument();
+      expect(screen.getByText(/We've pre-configured your parameters based on your selected template/)).toBeInTheDocument();
     });
 
     it('should toggle advanced mode details', () => {
       render(<ParametersStepWrapper />);
 
-      const toggleButton = screen.getByText('Show Details');
-      expect(screen.queryByText('Template Source')).not.toBeInTheDocument();
+      const toggleButton = screen.getByRole('button', { name: /details/i });
+      expect(toggleButton).toHaveTextContent('↓ Show Details');
+      expect(screen.queryByText((content) => content.includes('Template Source'))).not.toBeInTheDocument();
 
       fireEvent.click(toggleButton);
 
-      expect(screen.getByText('Template Source')).toBeInTheDocument();
-      expect(screen.getByText('Customisation')).toBeInTheDocument();
-      expect(screen.getByText('Hide Details')).toBeInTheDocument();
+      expect(screen.getByText((content) => content.includes('Template Source'))).toBeInTheDocument();
+      expect(screen.getByText((content) => content.includes('Easy Customization'))).toBeInTheDocument(); // Corrected text
+      expect(toggleButton).toHaveTextContent('↑ Hide Details');
     });
   });
 
@@ -248,7 +264,7 @@ describe('ParametersStep', () => {
       render(<ParametersStepWrapper />);
 
       expect(screen.getByText('Configure Parameters')).toBeInTheDocument();
-      expect(screen.getByText('Smart Defaults Applied')).toBeInTheDocument();
+      expect(screen.getByText((content) => content.includes('Smart Configuration Applied'))).toBeInTheDocument();
     });
 
     it('should show project details form for all project types', () => {

@@ -5,8 +5,28 @@ This project is a web application designed to help users *estimate* and *compare
 It contrasts the **traditional** development approach with a modern **agentic** approach (using AI assistance).
 Users input project details, choose AI models, and the application calculates potential costs, time savings, and other metrics, presenting them in an easy-to-understand format with charts and summaries.
 
+## Features
+
+### Two Interface Modes
+
+- **Guided Mode (Wizard)** - Step-by-step interface perfect for new users, with persistent progress and auto-advancing selections
+- **Advanced Mode** - Single-page form for power users who want direct access to all options
+
+### Key Capabilities
+
+- **Project Templates** - Pre-configured settings for common project types (web apps, APIs, mobile apps, etc.)
+- **Multi-Model Support** - Choose from Claude, OpenAI, DeepSeek, Gemini, and Amazon Nova models
+- **Persistent State** - Progress automatically saved across browser sessions
+- **Real-time Calculations** - Instant cost and time estimates as you input parameters
+- **Export Functionality** - Save results as PDF or JSON for sharing and record-keeping
+- **Responsive Design** - Works seamlessly on desktop, tablet, and mobile devices
+
 - [Agentic Cost Calculator](#agentic-cost-calculator)
+  - [Features](#features)
+    - [Two Interface Modes](#two-interface-modes)
+    - [Key Capabilities](#key-capabilities)
   - [Usage](#usage)
+    - [Interface Modes](#interface-modes)
     - [Testing](#testing)
   - [Architecture Overview](#architecture-overview)
   - [UI Flow](#ui-flow)
@@ -23,6 +43,26 @@ pnpm dev
 ```
 
 Then open http://localhost:3000 in your browser.
+
+### Interface Modes
+
+The application offers two distinct user experiences:
+
+**Guided Mode (Default)**
+
+- Step-by-step wizard interface with 7 clear stages: Welcome → Use Case → Template → Model → Parameters → Review → Results
+- Auto-advancing selections for template and model choices
+- Persistent progress saved automatically to localStorage
+- "Start Over" button readily available for quick resets
+- Consolidated navigation bar with app title, controls, and progress indicator
+- Perfect for first-time users or when you want a structured approach
+
+**Advanced Mode**
+
+- Single-page form with all options visible at once
+- Direct access to all parameters and settings
+- Ideal for power users who know exactly what they want to configure
+- Switch between modes anytime using the "Advanced Mode" toggle
 
 You can also query the API:
 

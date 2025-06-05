@@ -105,6 +105,7 @@ export const WelcomeStep: React.FC = () => {
         {/* Get Started Button */}
         <div className="text-center">
           <button
+            type="button"
             onClick={handleGetStarted}
             className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
           >

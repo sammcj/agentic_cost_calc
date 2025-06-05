@@ -5,13 +5,12 @@ import { ProjectParametersForm } from '../../inputs/ProjectParametersForm';
 import { TeamParametersForm } from '../../inputs/TeamParametersForm';
 import { ProductParametersForm } from '../../inputs/ProductParametersForm';
 import { GlobalParametersForm } from '../../inputs/GlobalParametersForm';
-import { ProjectDetailsForm } from '../../inputs/ProjectDetailsForm';
-import { NumericInput, formatNumber } from '../../inputs/NumericInput';
+import { NumericInput } from '../../inputs/NumericInput';
 
 export const ParametersStep: React.FC = () => {
   const { formState, setFormState } = useWizard();
   const [showAdvancedMode, setShowAdvancedMode] = useState(false);
-  const [hasUserModifiedDefaults, setHasUserModifiedDefaults] = useState(false);
+  const [hasUserModifiedDefaults] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['basic']));
 
   // Effect to detect if user has modified defaults and provide smart pre-population
@@ -133,9 +132,8 @@ export const ParametersStep: React.FC = () => {
     title: string;
     description: string;
     badge?: string;
-    defaultExpanded?: boolean;
     children: React.ReactNode;
-  }> = ({ id, title, description, badge, defaultExpanded = false, children }) => {
+  }> = ({ id, title, description, badge, children }) => {
     const isExpanded = expandedSections.has(id);
 
     return (
@@ -181,7 +179,6 @@ export const ParametersStep: React.FC = () => {
       title="Essential Parameters"
       description="The most important settings for your calculation. These are pre-filled based on your template but can be adjusted."
       badge="Most Important"
-      defaultExpanded={true}
     >
       <div className="space-y-6">
         {/* Project Information */}

@@ -5,10 +5,9 @@ import { WelcomeStep } from './steps/WelcomeStep';
 import { UseCaseStep } from './steps/UseCaseStep';
 import { TemplateStep } from './steps/TemplateStep';
 import { ModelStep } from './steps/ModelStep';
-// Import other steps as they're created
-// import { ParametersStep } from './steps/ParametersStep';
-// import { ReviewStep } from './steps/ReviewStep';
-// import { ResultsStep } from './steps/ResultsStep';
+import { ParametersStep } from './steps/ParametersStep';
+import { ReviewStep } from './steps/ReviewStep';
+import { ResultsStep } from './steps/ResultsStep';
 
 const WizardContent: React.FC = () => {
   const { wizardState } = useWizard();
@@ -24,23 +23,11 @@ const WizardContent: React.FC = () => {
       case 'model':
         return <ModelStep />;
       case 'parameters':
-        return (
-          <div className="text-center py-12">
-            <p className="text-gray-500">Parameters step coming soon...</p>
-          </div>
-        );
+        return <ParametersStep />;
       case 'review':
-        return (
-          <div className="text-center py-12">
-            <p className="text-gray-500">Review step coming soon...</p>
-          </div>
-        );
+        return <ReviewStep />;
       case 'results':
-        return (
-          <div className="text-center py-12">
-            <p className="text-gray-500">Results step coming soon...</p>
-          </div>
-        );
+        return <ResultsStep />;
       default:
         return <WelcomeStep />;
     }

@@ -200,6 +200,21 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
     return errors;
   }, [calculatorForm]);
 
+  // Enhanced handleCalculate that navigates to results on success
+  const handleCalculateWithNavigation = async () => {
+    try {
+      await calculatorForm.handleCalculate();
+      // If calculation was successful and we have a result, go to results step
+      if (calculatorForm.result) {
+        markStepComplete('review');
+        goToStep('results');
+      }
+    } catch (error) {
+      // Handle error - stay on current step
+      console.error('Calculation failed:', error);
+    }
+  };
+
   const contextValue: WizardContextValue = {
     wizardState,
     goToStep,
@@ -209,7 +224,8 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
     canNavigateToStep,
     isStepValid,
     getStepErrors,
-    ...calculatorForm
+    ...calculatorForm,
+    handleCalculate: handleCalculateWithNavigation
   };
 
   return (

@@ -35,10 +35,30 @@ export const StepNavigation: React.FC = () => {
   const canGoBack = wizardState.navigationHistory.length > 1;
 
   return (
-    <div className="wizard-navigation">
+    <nav className="wizard-navigation" aria-label="Wizard Progress" role="navigation">
       {/* Progress Indicator */}
       <div className="mb-8">
-        <div className="flex items-center justify-between">
+        {/* Mobile-friendly progress bar */}
+        <div className="sm:hidden mb-4">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-600">Step {currentStepIndex + 1} of {stepOrder.length}</span>
+            <span className="text-gray-600">{stepLabels[wizardState.currentStep]}</span>
+          </div>
+          <div className="mt-2 bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${((currentStepIndex + 1) / stepOrder.length) * 100}%` }}
+              aria-valuenow={currentStepIndex + 1}
+              aria-valuemin={1}
+              aria-valuemax={stepOrder.length}
+              role="progressbar"
+              aria-label={`Progress: step ${currentStepIndex + 1} of ${stepOrder.length}`}
+            />
+          </div>
+        </div>
+
+        {/* Desktop step indicator */}
+        <div className="hidden sm:flex items-center justify-between">
           {stepOrder.map((step, index) => {
             const isActive = step === wizardState.currentStep;
             const isCompleted = wizardState.completedSteps.has(step);
@@ -92,35 +112,58 @@ export const StepNavigation: React.FC = () => {
         <button
           onClick={goToPreviousStep}
           disabled={!canGoBack}
+          aria-label={`Go to previous step${canGoBack ? `: ${stepLabels[wizardState.navigationHistory[wizardState.navigationHistory.length - 2]] || 'previous'}` : ''}`}
+          aria-describedby="prev-step-hint"
           className={`
-            px-4 py-2 text-sm font-medium rounded-md
+            px-4 py-2 text-sm font-medium rounded-md transition-colors
             ${canGoBack
               ? 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
               : 'text-gray-400 bg-gray-100 border border-gray-200 cursor-not-allowed'
             }
           `}
         >
-          Previous
+          <span className="flex items-center">
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Previous
+          </span>
         </button>
 
-        <div className="text-sm text-gray-500">
-          Step {currentStepIndex + 1} of {stepOrder.length}
+        <div className="text-sm text-gray-500 px-4 text-center">
+          <div className="font-medium">{stepLabels[wizardState.currentStep]}</div>
+          <div className="text-xs">Step {currentStepIndex + 1} of {stepOrder.length}</div>
         </div>
 
         <button
           onClick={goToNextStep}
           disabled={!canGoNext}
+          aria-label={`${wizardState.currentStep === 'results' ? 'Finish wizard' : `Continue to next step: ${stepLabels[stepOrder[currentStepIndex + 1]] || 'next'}`}`}
+          aria-describedby="next-step-hint"
           className={`
-            px-4 py-2 text-sm font-medium rounded-md
+            px-4 py-2 text-sm font-medium rounded-md transition-colors
             ${canGoNext
               ? 'text-white bg-blue-600 border border-transparent hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
               : 'text-gray-400 bg-gray-100 border border-gray-200 cursor-not-allowed'
             }
           `}
         >
-          {wizardState.currentStep === 'results' ? 'Finish' : 'Next'}
+          <span className="flex items-center">
+            {wizardState.currentStep === 'results' ? 'Finish' : 'Next'}
+            {wizardState.currentStep !== 'results' && (
+              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            )}
+          </span>
         </button>
       </div>
-    </div>
+
+      {/* Screen reader hints */}
+      <div className="sr-only">
+        <div id="prev-step-hint">Use Alt+Left Arrow for keyboard navigation</div>
+        <div id="next-step-hint">Use Alt+Right Arrow for keyboard navigation</div>
+      </div>
+    </nav>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { WizardProvider, useWizard } from './WizardProvider';
 import { StepNavigation } from './StepNavigation';
 import { WelcomeStep } from './steps/WelcomeStep';
@@ -10,7 +10,57 @@ import { ReviewStep } from './steps/ReviewStep';
 import { ResultsStep } from './steps/ResultsStep';
 
 const WizardContent: React.FC = () => {
-  const { wizardState } = useWizard();
+  const { wizardState, goToStep, goToPreviousStep, canNavigateToStep } = useWizard();
+
+  // Browser navigation support
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && event.state.wizardStep) {
+        const targetStep = event.state.wizardStep;
+        if (canNavigateToStep(targetStep)) {
+          goToStep(targetStep);
+        } else {
+          // If user tries to navigate to an invalid step, go back to previous valid step
+          goToPreviousStep();
+        }
+      }
+    };
+
+    // Update browser history when step changes
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set('step', wizardState.currentStep);
+    window.history.replaceState(
+      { wizardStep: wizardState.currentStep },
+      '',
+      currentUrl.toString()
+    );
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [wizardState.currentStep, goToStep, goToPreviousStep, canNavigateToStep]);
+
+  // Keyboard navigation support
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Only handle keyboard navigation if no input is focused
+      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA' || document.activeElement?.tagName === 'SELECT') {
+        return;
+      }
+
+      if (event.altKey) {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          goToPreviousStep();
+        } else if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          // This will be handled by the next button logic in StepNavigation
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [goToPreviousStep]);
 
   const renderCurrentStep = () => {
     switch (wizardState.currentStep) {

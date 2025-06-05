@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { WizardStep } from '../WizardStep';
 import { useWizard } from '../WizardProvider';
 import { templates, Template } from '@/shared/utils/projectTemplates';
-import { calculateCosts } from '@/shared/utils/calculations';
-import { formatTokens } from '@/shared/utils/formatting';
 
 export const TemplateStep: React.FC = () => {
   const { formState, setFormState, markStepComplete, goToNextStep } = useWizard();
-  const [expandedTemplate, setExpandedTemplate] = useState<string | null>(null);
 
   // Filter templates based on selected project type
   const filteredTemplates = templates.filter(template => {
@@ -185,32 +182,6 @@ export const TemplateStep: React.FC = () => {
     }).format(amount);
   };
 
-  const toggleTemplateExpansion = (templateId: string) => {
-    setExpandedTemplate(expandedTemplate === templateId ? null : templateId);
-  };
-
-  const getBenefits = (template: Template) => {
-    const benefits = [];
-
-    if (template.defaultValues.projectType === 'oneoff') {
-      benefits.push('Faster project delivery');
-      benefits.push('Reduced development costs');
-      benefits.push('Consistent code quality');
-    } else if (template.defaultValues.projectType === 'ongoing') {
-      if (template.defaultValues.teamParams) {
-        benefits.push('Enhanced developer productivity');
-        benefits.push('Accelerated feature development');
-        benefits.push('Improved code consistency');
-      }
-      if (template.defaultValues.productParams) {
-        benefits.push('Scalable AI integration');
-        benefits.push('Cost-effective operations');
-        benefits.push('Predictable usage patterns');
-      }
-    }
-
-    return benefits;
-  };
 
   return (
     <WizardStep
@@ -249,19 +220,13 @@ export const TemplateStep: React.FC = () => {
               </p>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {templatesToDisplay.map((template) => {
-                  const isExpanded = expandedTemplate === template.id;
                   const preview = getTemplatePreview(template);
-                  const benefits = getBenefits(template);
 
                   return (
                     <div
                       key={template.id}
-                      className={`relative cursor-pointer rounded-lg border-2 bg-white transition-all hover:shadow-lg ${
-                        isExpanded
-                          ? 'border-blue-500 shadow-lg transform scale-105'
-                          : 'border-gray-200 hover:border-blue-300'
-                      }`}
-                      onClick={() => toggleTemplateExpansion(template.id)}
+                      className="relative cursor-pointer rounded-lg border-2 border-gray-200 bg-white transition-all hover:shadow-lg hover:border-blue-300"
+                      onClick={() => handleTemplateSelect(template)}
                     >
                       <div className="p-6">
                         {/* Combined Project Badge */}
@@ -279,19 +244,9 @@ export const TemplateStep: React.FC = () => {
                           <h3 className="text-lg font-semibold text-gray-900">
                             {template.name}
                           </h3>
-                          <div className="ml-auto">
-                            <svg
-                              className={`h-5 w-5 text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                          </div>
                         </div>
 
-                        {/* Rest of template card content */}
+                        {/* Description */}
                         <p className="text-gray-600 text-sm mb-4">
                           {template.description}
                         </p>
@@ -344,36 +299,9 @@ export const TemplateStep: React.FC = () => {
                           </div>
                         )}
 
-                        {isExpanded && (
-                          <div className="mt-4 pt-4 border-t border-gray-200 animate-in slide-in-from-top-2 duration-200">
-                            <div className="mb-4">
-                              <h4 className="text-xs font-medium text-blue-600 uppercase tracking-wide mb-2">
-                                Key Benefits
-                              </h4>
-                              <div className="space-y-1">
-                                {benefits.map((benefit, index) => (
-                                  <div key={index} className="flex items-center text-xs text-gray-700">
-                                    <svg className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                    </svg>
-                                    {benefit}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        <button
-                          className="w-full mt-4 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleTemplateSelect(template);
-                          }}
-                          aria-label={`Select ${template.name} template for combined project`}
-                        >
-                          Use This Template
-                        </button>
+                        <div className="mt-4 text-center text-xs text-blue-600 font-medium">
+                          Click to select this template
+                        </div>
                       </div>
                     </div>
                   );
@@ -389,19 +317,13 @@ export const TemplateStep: React.FC = () => {
           /* Standard Template Layout */
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredTemplates.map((template) => {
-              const isExpanded = expandedTemplate === template.id;
               const preview = getTemplatePreview(template);
-              const benefits = getBenefits(template);
 
               return (
                 <div
                   key={template.id}
-                  className={`relative cursor-pointer rounded-lg border-2 bg-white transition-all hover:shadow-lg ${
-                    isExpanded
-                      ? 'border-blue-500 shadow-lg transform scale-105'
-                      : 'border-gray-200 hover:border-blue-300'
-                  }`}
-                  onClick={() => toggleTemplateExpansion(template.id)}
+                  className="relative cursor-pointer rounded-lg border-2 border-gray-200 bg-white transition-all hover:shadow-lg hover:border-blue-300"
+                  onClick={() => handleTemplateSelect(template)}
                 >
                   <div className="p-6">
                     {/* Icon and Title */}
@@ -412,16 +334,6 @@ export const TemplateStep: React.FC = () => {
                       <h3 className="text-lg font-semibold text-gray-900">
                         {template.name}
                       </h3>
-                      <div className="ml-auto">
-                        <svg
-                          className={`h-5 w-5 text-gray-400 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
                     </div>
 
                     {/* Description */}
@@ -498,52 +410,9 @@ export const TemplateStep: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Expanded Content */}
-                    {isExpanded && (
-                      <div className="mt-4 pt-4 border-t border-gray-200 animate-in slide-in-from-top-2 duration-200">
-                        {/* Benefits */}
-                        <div className="mb-4">
-                          <h4 className="text-xs font-medium text-blue-600 uppercase tracking-wide mb-2">
-                            Key Benefits
-                          </h4>
-                          <div className="space-y-1">
-                            {benefits.map((benefit, index) => (
-                              <div key={index} className="flex items-center text-xs text-gray-700">
-                                <svg className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                                {benefit}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Use Case Details */}
-                        <div className="mb-4">
-                          <h4 className="text-xs font-medium text-blue-600 uppercase tracking-wide mb-2">
-                            Best For
-                          </h4>
-                          <p className="text-xs text-gray-600">
-                            {template.defaultValues.projectType === 'oneoff'
-                              ? 'Teams looking to accelerate specific project delivery with AI assistance'
-                              : 'Organizations implementing ongoing AI-powered development workflows'
-                            }
-                          </p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Select Button */}
-                    <button
-                      className="w-full mt-4 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleTemplateSelect(template);
-                      }}
-                      aria-label={`Select ${template.name} template`}
-                    >
-                      Use This Template
-                    </button>
+                    <div className="mt-4 text-center text-xs text-blue-600 font-medium">
+                      Click to select this template
+                    </div>
                   </div>
                 </div>
               );

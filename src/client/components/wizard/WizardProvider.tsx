@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useCallback, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useCallback, useState, ReactNode, useEffect } from 'react';
 import { useCalculatorForm } from '../../hooks/useCalculatorForm';
 import { CalculationFormState } from '@/shared/types/models';
 
@@ -37,6 +37,7 @@ interface WizardContextValue {
   result: any;
   handleCalculate: () => Promise<void>;
   resetForm: () => void;
+  startOver: () => void;
 
   // Step validation
   isStepValid: (step: WizardStep) => boolean;
@@ -55,18 +56,81 @@ const stepOrder: WizardStep[] = [
   'results'
 ];
 
+const WIZARD_STORAGE_KEY = 'agentic-cost-calculator-wizard-state';
+const FORM_STORAGE_KEY = 'agentic-cost-calculator-form-state';
+
 interface WizardProviderProps {
   children: ReactNode;
 }
 
+// Helper functions for localStorage persistence
+const saveToLocalStorage = (key: string, data: any) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (error) {
+    console.warn('Failed to save to localStorage:', error);
+  }
+};
+
+const loadFromLocalStorage = (key: string) => {
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    console.warn('Failed to load from localStorage:', error);
+    return null;
+  }
+};
+
+const clearLocalStorage = () => {
+  try {
+    localStorage.removeItem(WIZARD_STORAGE_KEY);
+    localStorage.removeItem(FORM_STORAGE_KEY);
+  } catch (error) {
+    console.warn('Failed to clear localStorage:', error);
+  }
+};
+
 export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
   const calculatorForm = useCalculatorForm();
 
-  const [wizardState, setWizardState] = useState<WizardState>({
-    currentStep: 'welcome',
-    completedSteps: new Set(),
-    navigationHistory: ['welcome']
+  // Initialize wizard state with persistence
+  const [wizardState, setWizardState] = useState<WizardState>(() => {
+    const savedState = loadFromLocalStorage(WIZARD_STORAGE_KEY);
+    if (savedState) {
+      return {
+        ...savedState,
+        completedSteps: new Set(savedState.completedSteps || [])
+      };
+    }
+    return {
+      currentStep: 'welcome',
+      completedSteps: new Set(),
+      navigationHistory: ['welcome']
+    };
   });
+
+  // Save wizard state to localStorage whenever it changes
+  useEffect(() => {
+    const stateToSave = {
+      ...wizardState,
+      completedSteps: Array.from(wizardState.completedSteps)
+    };
+    saveToLocalStorage(WIZARD_STORAGE_KEY, stateToSave);
+  }, [wizardState]);
+
+  // Save form state to localStorage whenever it changes
+  useEffect(() => {
+    saveToLocalStorage(FORM_STORAGE_KEY, calculatorForm.formState);
+  }, [calculatorForm.formState]);
+
+  // Load form state from localStorage on mount
+  useEffect(() => {
+    const savedFormState = loadFromLocalStorage(FORM_STORAGE_KEY);
+    if (savedFormState) {
+      calculatorForm.setFormState(savedFormState);
+    }
+  }, []);
 
   const goToStep = useCallback((step: WizardStep) => {
     setWizardState(prev => ({
@@ -215,6 +279,22 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
     }
   };
 
+  // Start over function that resets everything
+  const startOver = useCallback(() => {
+    // Clear localStorage
+    clearLocalStorage();
+
+    // Reset form state
+    calculatorForm.resetForm();
+
+    // Reset wizard state
+    setWizardState({
+      currentStep: 'welcome',
+      completedSteps: new Set(),
+      navigationHistory: ['welcome']
+    });
+  }, [calculatorForm.resetForm]);
+
   const contextValue: WizardContextValue = {
     wizardState,
     goToStep,
@@ -224,6 +304,7 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
     canNavigateToStep,
     isStepValid,
     getStepErrors,
+    startOver,
     ...calculatorForm,
     handleCalculate: handleCalculateWithNavigation
   };

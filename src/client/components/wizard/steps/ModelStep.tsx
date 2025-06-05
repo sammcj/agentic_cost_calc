@@ -21,6 +21,12 @@ export const ModelStep: React.FC = () => {
         modelRatio: undefined
       }
     });
+
+    // Auto-advance to next step if not using advanced options
+    if (!showAdvanced) {
+      markStepComplete('model');
+      goToNextStep();
+    }
   };
 
   const handleSecondaryModelSelect = (modelProfile: ModelProfile) => {

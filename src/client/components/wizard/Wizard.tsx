@@ -9,7 +9,12 @@ import { ParametersStep } from './steps/ParametersStep';
 import { ReviewStep } from './steps/ReviewStep';
 import { ResultsStep } from './steps/ResultsStep';
 
-const WizardContent: React.FC = () => {
+interface WizardProps {
+  useWizard: boolean;
+  setUseWizard: (value: boolean) => void;
+}
+
+const WizardContent: React.FC<WizardProps> = ({ useWizard: useWizardMode, setUseWizard }) => {
   const { wizardState, goToStep, goToPreviousStep, canNavigateToStep } = useWizard();
 
   // Browser navigation support
@@ -86,24 +91,24 @@ const WizardContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Step Content */}
-        <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
-          {renderCurrentStep()}
+        {/* Navigation */}
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+          <StepNavigation useWizard={useWizardMode} setUseWizard={setUseWizard} />
         </div>
 
-        {/* Navigation */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <StepNavigation />
+        {/* Step Content */}
+        <div className="bg-white rounded-lg shadow-sm p-8">
+          {renderCurrentStep()}
         </div>
       </div>
     </div>
   );
 };
 
-export const Wizard: React.FC = () => {
+export const Wizard: React.FC<WizardProps> = ({ useWizard, setUseWizard }) => {
   return (
     <WizardProvider>
-      <WizardContent />
+      <WizardContent useWizard={useWizard} setUseWizard={setUseWizard} />
     </WizardProvider>
   );
 };

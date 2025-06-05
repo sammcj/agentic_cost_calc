@@ -4,11 +4,10 @@ import { WizardStep } from '../WizardStep';
 import Results from '../../results/Results';
 
 export const ResultsStep: React.FC = () => {
-  const { result, resetForm, goToStep, formState } = useWizard();
+  const { result, startOver, goToStep, formState, resetForm } = useWizard();
 
   const handleStartNew = () => {
-    resetForm();
-    goToStep('welcome');
+    startOver();
   };
 
   const handleModifyCalculation = () => {

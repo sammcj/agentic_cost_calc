@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Calculator } from './components/Calculator';
+import { Wizard } from './components/wizard/Wizard';
 
 export const App: React.FC = () => {
+  const [useWizard, setUseWizard] = useState(true);
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
@@ -14,6 +17,13 @@ export const App: React.FC = () => {
               </h1>
             </div>
             <div className="flex items-center space-x-4">
+              {/* Mode Toggle */}
+              <button
+                onClick={() => setUseWizard(!useWizard)}
+                className="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              >
+                {useWizard ? 'Advanced Mode' : 'Guided Mode'}
+              </button>
               <a
                 href="https://github.com/sammcj/agentic_cost_calc"
                 target="_blank"
@@ -39,39 +49,47 @@ export const App: React.FC = () => {
       </header>
 
       {/* Main Content */}
-      <main className="w-full py-8">
-        <div className="mx-[5%]">
-          <Calculator />
-        </div>
+      <main className="w-full">
+        {useWizard ? (
+          <Wizard />
+        ) : (
+          <div className="py-8">
+            <div className="mx-[5%]">
+              <Calculator />
+            </div>
+          </div>
+        )}
       </main>
 
       {/* Footer */}
-      <footer className="bg-white mt-8 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="text-center text-sm text-gray-500">
-            <p>
-              Developed by{' '}
-              <a
-                href="https://twitter.com/s_mcleod"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800"
-              >
-                @s_mcleod
-              </a>
-              {' | '}
-              <a
-                href="https://github.com/sammcj/agentic_cost_calc"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800"
-              >
-                View on GitHub
-              </a>
-            </p>
+      {!useWizard && (
+        <footer className="bg-white mt-8 border-t border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="text-center text-sm text-gray-500">
+              <p>
+                Developed by{' '}
+                <a
+                  href="https://twitter.com/s_mcleod"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800"
+                >
+                  @s_mcleod
+                </a>
+                {' | '}
+                <a
+                  href="https://github.com/sammcj/agentic_cost_calc"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-800"
+                >
+                  View on GitHub
+                </a>
+              </p>
+            </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 };

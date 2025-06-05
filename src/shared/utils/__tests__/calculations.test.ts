@@ -12,7 +12,7 @@ describe('calculateCosts', () => {
           totalCostMultiplier: 1.0
         },
         modelConfig: {
-          primaryModelId: 'claude_3_7_sonnet'
+          primaryModelId: 'claude_4_0_sonnet'
         },
         projectParams: {
           manualDevHours: 160,
@@ -55,7 +55,7 @@ describe('calculateCosts', () => {
           totalCostMultiplier: 1.0
         },
         modelConfig: {
-          primaryModelId: 'claude_3_7_sonnet'
+          primaryModelId: 'claude_4_0_sonnet'
         },
         projectParams: {
           manualDevHours: 100,
@@ -88,7 +88,7 @@ describe('calculateCosts', () => {
           totalCostMultiplier: 1.5 // 50% increase
         },
         modelConfig: {
-          primaryModelId: 'claude_3_7_sonnet'
+          primaryModelId: 'claude_4_0_sonnet'
         },
         projectParams: {
           manualDevHours: 100,
@@ -132,7 +132,7 @@ describe('calculateCosts', () => {
           totalCostMultiplier: 1.0
         },
         modelConfig: {
-          primaryModelId: 'claude_3_7_sonnet'
+          primaryModelId: 'claude_4_0_sonnet'
         },
         projectParams: {
           manualDevHours: 100,
@@ -161,7 +161,7 @@ describe('calculateCosts', () => {
             totalCostMultiplier: 1.0
           },
           modelConfig: {
-            primaryModelId: 'claude_3_7_sonnet'
+            primaryModelId: 'claude_4_0_sonnet'
           },
           teamParams: {
             numberOfDevs: 2,
@@ -202,7 +202,7 @@ describe('calculateCosts', () => {
           totalCostMultiplier: 1.0
         },
         modelConfig: {
-          primaryModelId: 'claude_3_7_sonnet'
+          primaryModelId: 'claude_4_0_sonnet'
         },
         productParams: {
           tokensPerDayOngoing: 2000000,
@@ -236,7 +236,7 @@ describe('calculateCosts', () => {
           totalCostMultiplier: 1.0
         },
         modelConfig: {
-          primaryModelId: 'claude_3_7_sonnet'
+          primaryModelId: 'claude_4_0_sonnet'
         },
         projectParams: {
           manualDevHours: 160,
@@ -292,8 +292,8 @@ describe('calculateCosts', () => {
           totalCostMultiplier: 1.0
         },
         modelConfig: {
-          primaryModelId: 'claude_3_7_sonnet',
-          secondaryModelId: 'claude_3_7_sonnet', // Use a model we know exists
+          primaryModelId: 'claude_4_0_sonnet',
+          secondaryModelId: 'claude_4_0_sonnet', // Use a model we know exists
           modelRatio: 0.7 // 70% primary, 30% secondary
         },
         projectParams: {
@@ -325,7 +325,7 @@ describe('calculateCosts', () => {
           currencyRate: 0.64
         },
         modelConfig: {
-          primaryModelId: 'claude_3_7_sonnet'
+          primaryModelId: 'claude_4_0_sonnet'
         },
         projectParams: {
           manualDevHours: 0,

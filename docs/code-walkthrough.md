@@ -980,7 +980,7 @@ export const templates = [
       // Pre-fills global settings
       globalParams: { currencyRate: 0.64 /* ... */ },
       // Pre-selects an AI model
-      modelConfig: { primaryModelId: 'claude_3_7_sonnet' /* ... */ },
+      modelConfig: { primaryModelId: 'claude_4_0_sonnet' /* ... */ },
       // Pre-fills project-specific numbers
       projectParams: {
         manualDevHours: 70,
@@ -999,7 +999,7 @@ export const templates = [
       // Tells InputPanel to show the 'ongoing' usage forms
       projectType: 'ongoing',
       globalParams: { currencyRate: 0.64 /* ... */ },
-      modelConfig: { primaryModelId: 'claude_3_7_sonnet' /* ... */ },
+      modelConfig: { primaryModelId: 'claude_4_0_sonnet' /* ... */ },
       // Pre-fills team settings
       teamParams: {
         numberOfDevs: 2,

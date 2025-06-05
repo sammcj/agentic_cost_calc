@@ -72,7 +72,7 @@ export const ModelStep: React.FC = () => {
 
   const getModelDescription = (modelId: string) => {
     const descriptions: Record<string, string> = {
-      claude_3_7_sonnet: 'Excellent for complex reasoning and coding tasks. Best overall choice for agentic development.',
+      claude_4_0_sonnet: 'Excellent for complex reasoning and coding tasks. Best overall choice for agentic development.',
       claude_3_5_haiku: 'Fast and cost-effective, but limited agentic coding capabilities.',
       openai_o3: 'Advanced reasoning model with strong problem-solving capabilities.',
       openai_o3_mini: 'Balanced performance and cost with good reasoning abilities.',

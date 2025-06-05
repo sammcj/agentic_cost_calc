@@ -15,7 +15,7 @@ const standardDefaults: CalculationFormState = {
     disclaimerText: defaultDisclaimerText
   },
   modelConfig: {
-    primaryModel: modelConfig.claude_3_7_sonnet
+    primaryModel: modelConfig.claude_4_0_sonnet
   }
 }
 

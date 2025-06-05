@@ -9,7 +9,7 @@ describe('Ongoing Cost Breakdown', () => {
       currencyRate: 0.65
     },
     modelConfig: {
-      primaryModelId: 'claude_3_7_sonnet'
+      primaryModelId: 'claude_4_0_sonnet'
     },
     projectType: 'ongoing'
   };

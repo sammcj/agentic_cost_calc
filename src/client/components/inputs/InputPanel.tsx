@@ -174,7 +174,7 @@ export const InputPanel: React.FC<InputPanelProps> = ({
         ) : (
           <>
             <DualModelSelector
-              primaryModel={value.modelConfig?.primaryModel || getModelById('claude_3_7_sonnet')} // Default to prevent undefined
+              primaryModel={value.modelConfig?.primaryModel || getModelById('claude_4_0_sonnet')} // Default to prevent undefined
               secondaryModel={value.modelConfig?.secondaryModel || getModelById('claude_3_5_haiku')} // Default to prevent undefined
               ratio={value.modelConfig?.modelRatio || 0.7}
               onChangePrimary={(model) =>

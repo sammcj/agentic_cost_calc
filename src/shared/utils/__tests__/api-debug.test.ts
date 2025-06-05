@@ -19,7 +19,7 @@ describe('API Debug', () => {
           ([_, profile]) =>
             profile.inputTokenCost1M === formState.modelConfig?.primaryModel?.inputTokenCost1M &&
             profile.outputTokenCost1M === formState.modelConfig?.primaryModel?.outputTokenCost1M
-        )?.[0] || 'claude_3_7_sonnet', // Default if not found
+        )?.[0] || 'claude_4_0_sonnet', // Default if not found
 
         // Only include secondaryModelId if secondaryModel exists
         ...(formState.modelConfig?.secondaryModel && {

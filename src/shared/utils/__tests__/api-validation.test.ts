@@ -12,7 +12,7 @@ describe('API Validation', () => {
         totalCostMultiplier: 1.0
       },
       modelConfig: {
-        primaryModelId: 'claude_3_7_sonnet'
+        primaryModelId: 'claude_4_0_sonnet'
       },
       projectParams: {
         manualDevHours: 160,
@@ -40,7 +40,7 @@ describe('API Validation', () => {
         totalCostMultiplier: 1.0
       },
       modelConfig: {
-        primaryModelId: 'claude_3_7_sonnet'
+        primaryModelId: 'claude_4_0_sonnet'
       },
       projectParams: {
         manualDevHours: 160,
@@ -73,7 +73,7 @@ describe('API Validation', () => {
         totalCostMultiplier: 1.0
       },
       modelConfig: {
-        primaryModel: modelConfig.claude_3_7_sonnet,
+        primaryModel: modelConfig.claude_4_0_sonnet,
         secondaryModel: modelConfig.claude_3_5_haiku // Use an actual model from modelConfig
       },
       projectParams: {
@@ -97,7 +97,7 @@ describe('API Validation', () => {
           ([_, profile]) =>
             profile.inputTokenCost1M === formState.modelConfig?.primaryModel?.inputTokenCost1M &&
             profile.outputTokenCost1M === formState.modelConfig?.primaryModel?.outputTokenCost1M
-        )?.[0] || 'claude_3_7_sonnet',
+        )?.[0] || 'claude_4_0_sonnet',
 
         ...(formState.modelConfig?.secondaryModel && {
           secondaryModelId: Object.entries(modelConfig).find(
@@ -130,7 +130,7 @@ describe('API Validation', () => {
           totalCostMultiplier: 1.0
         },
         modelConfig: {
-          primaryModel: modelConfig.claude_3_7_sonnet,
+          primaryModel: modelConfig.claude_4_0_sonnet,
           secondaryModel: modelConfig.claude_3_5_haiku // Use an actual model from modelConfig
         },
         projectParams: {
@@ -158,7 +158,7 @@ describe('API Validation', () => {
           ([_, profile]) =>
             profile.inputTokenCost1M === formState.modelConfig?.primaryModel?.inputTokenCost1M &&
             profile.outputTokenCost1M === formState.modelConfig?.primaryModel?.outputTokenCost1M
-        )?.[0] || 'claude_3_7_sonnet'
+        )?.[0] || 'claude_4_0_sonnet'
       }
     };
 
@@ -181,7 +181,7 @@ describe('API Validation', () => {
         totalCostMultiplier: 1.0
       },
       modelConfig: {
-        primaryModel: modelConfig.claude_3_7_sonnet,
+        primaryModel: modelConfig.claude_4_0_sonnet,
         secondaryModel: undefined,
         modelRatio: undefined
       },
@@ -207,7 +207,7 @@ describe('API Validation', () => {
           ([_, profile]) =>
             profile.inputTokenCost1M === formState.modelConfig?.primaryModel?.inputTokenCost1M &&
             profile.outputTokenCost1M === formState.modelConfig?.primaryModel?.outputTokenCost1M
-        )?.[0] || 'claude_3_7_sonnet', // Default if not found
+        )?.[0] || 'claude_4_0_sonnet', // Default if not found
 
         // Only include secondaryModelId if secondaryModel exists
         ...(formState.modelConfig?.secondaryModel && {

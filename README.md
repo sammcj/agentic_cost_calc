@@ -35,7 +35,7 @@ curl -X POST http://localhost:3001/api/calculate -H "Content-Type: application/j
     "totalCostMultiplier": 1.0
   },
   "modelConfig": {
-    "primaryModelId": "claude_3_7_sonnet"
+    "primaryModelId": "claude_4_0_sonnet"
   },
   "projectParams": {
     "manualDevHours": 160,

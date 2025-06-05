@@ -14,7 +14,7 @@ import { ModelConfig, ModelProfile } from '../types/models'
 // modelCapabilityMultiplier: Multiplier adjusting the model's capability (used for pretty basic overhead calculation at present)
 
 export const modelConfig: ModelConfig = {
-  claude_3_7_sonnet: {
+  claude_4_0_sonnet: {
     inputTokenCost1M         : 3.00,    // $3.00 / 1M Tokens
     outputTokenCost1M        : 15.00,   // $15.00 / 1M Tokens
     cacheWriteTokenCost1M    : 3.75,    // $3.75 / 1M Tokens (25% higher than input)
@@ -92,7 +92,7 @@ export const modelConfig: ModelConfig = {
     cacheWriteTokenCost1M    : 0.105,   // $0.105 / 1M Tokens (25% higher than input)
     cacheReadTokenCost1M     : 0.21,    // $0.21 / 1M Tokens (as specified)
     modelSpeedMultiplier     : 0.08,    // 0.08x speed (slower due rework required because of vastly lower capability)
-    modelCapabilityMultiplier: 0.1,     // 0.1x capability (vastly worse than Sonnet 3.7)
+    modelCapabilityMultiplier: 0.1,     // 0.1x capability (vastly worse than Sonnet 4.0)
     agenticCodingCapable     : false    // Not capable of agentic coding
   },
   amazon_nova_lite: {
@@ -101,7 +101,7 @@ export const modelConfig: ModelConfig = {
     cacheWriteTokenCost1M    : 0.07875,   // $0.07875 / 1M Tokens (25% higher than input)
     cacheReadTokenCost1M     : 0.01575,   // $0.01575 / 1M Tokens (as specified)
     modelSpeedMultiplier     : 0.05,      // 0.1x speed (slower due rework required because of vastly lower capability)
-    modelCapabilityMultiplier: 0.05,      // 0.05x capability (20x worse than Sonnet 3.7)
+    modelCapabilityMultiplier: 0.05,      // 0.05x capability (20x worse than Sonnet 4.0)
     agenticCodingCapable     : false      // Not capable of agentic coding
   },
 }
@@ -132,7 +132,7 @@ export const getModelById = (modelId: string): ModelProfile => {
   const model = modelConfig[modelId]
   if (!model) {
     // Return a default model if the requested one is not found
-    return modelConfig.claude_3_7_sonnet
+    return modelConfig.claude_4_0_sonnet
   }
   return model
 }
@@ -165,7 +165,7 @@ export const getModelAgenticWarning = (modelId: string): string | undefined => {
 
 export const getModelOptions = (): Array<{ value: string, label: string, profile: ModelProfile }> => {
   return Object.entries(modelConfig).map(([id, profile]) => {
-    // Format the model name for display (e.g., "claude_3_7_sonnet" -> "Claude 3.7 Sonnet")
+    // Format the model name for display (e.g., "claude_4_0_sonnet" -> "Claude 3.7 Sonnet")
     const formattedName = id
       .split('_')
       .map(part => {

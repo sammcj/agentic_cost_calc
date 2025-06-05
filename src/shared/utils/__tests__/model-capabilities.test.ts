@@ -3,7 +3,7 @@ import { isModelAgenticCapable, getModelAgenticWarning } from '../modelConfig';
 describe('Model Capabilities Tests', () => {
   describe('isModelAgenticCapable', () => {
     it('returns true for agentic-capable models', () => {
-      expect(isModelAgenticCapable('claude_3_7_sonnet')).toBe(true);
+      expect(isModelAgenticCapable('claude_4_0_sonnet')).toBe(true);
       expect(isModelAgenticCapable('gemini_2_5_pro')).toBe(true);
     });
 
@@ -20,7 +20,7 @@ describe('Model Capabilities Tests', () => {
 
   describe('getModelAgenticWarning', () => {
     it('returns undefined for agentic-capable models', () => {
-      expect(getModelAgenticWarning('claude_3_7_sonnet')).toBeUndefined();
+      expect(getModelAgenticWarning('claude_4_0_sonnet')).toBeUndefined();
       expect(getModelAgenticWarning('gemini_2_5_pro')).toBeUndefined();
     });
 

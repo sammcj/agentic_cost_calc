@@ -11,16 +11,16 @@ export const ModelStep: React.FC = () => {
   const modelOptions = getModelOptions();
 
   const handlePrimaryModelSelect = (modelProfile: ModelProfile) => {
-    setFormState({
-      ...formState,
+    setFormState(prevState => ({
+      ...prevState,
       modelConfig: {
-        ...formState.modelConfig,
+        ...prevState.modelConfig,
         primaryModel: modelProfile,
         // Reset secondary model if it was set
         secondaryModel: undefined,
         modelRatio: undefined
       }
-    });
+    }));
 
     // Auto-advance to next step if not using advanced options
     if (!showAdvanced) {
@@ -30,24 +30,24 @@ export const ModelStep: React.FC = () => {
   };
 
   const handleSecondaryModelSelect = (modelProfile: ModelProfile) => {
-    setFormState({
-      ...formState,
+    setFormState(prevState => ({
+      ...prevState,
       modelConfig: {
-        ...formState.modelConfig,
+        ...prevState.modelConfig,
         secondaryModel: modelProfile,
-        modelRatio: formState.modelConfig.modelRatio || 0.7 // Default to 70% primary
+        modelRatio: prevState.modelConfig?.modelRatio || 0.7 // Default to 70% primary
       }
-    });
+    }));
   };
 
   const handleRatioChange = (ratio: number) => {
-    setFormState({
-      ...formState,
+    setFormState(prevState => ({
+      ...prevState,
       modelConfig: {
-        ...formState.modelConfig,
+        ...prevState.modelConfig,
         modelRatio: ratio
       }
-    });
+    }));
   };
 
   const handleContinue = () => {

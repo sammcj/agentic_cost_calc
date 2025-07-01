@@ -151,33 +151,33 @@ describe('WizardProvider', () => {
       expect(screen.getByTestId('current-step')).toHaveTextContent('welcome');
     });
 
-    it('should not go to next step if at end', () => {
+    it('should not go to next step if at end', async () => {
       renderWithProvider();
 
       // Navigate to results step (last step)
-      act(() => {
+      await act(async () => {
         fireEvent.click(screen.getByTestId('go-to-usecase'));
       });
-      act(() => {
+      await act(async () => {
         fireEvent.click(screen.getByTestId('go-next')); // template
       });
-      act(() => {
+      await act(async () => {
         fireEvent.click(screen.getByTestId('go-next')); // model
       });
-      act(() => {
+      await act(async () => {
         fireEvent.click(screen.getByTestId('go-next')); // parameters
       });
-      act(() => {
+      await act(async () => {
         fireEvent.click(screen.getByTestId('go-next')); // review
       });
-      act(() => {
+      await act(async () => {
         fireEvent.click(screen.getByTestId('go-next')); // results
       });
 
       expect(screen.getByTestId('current-step')).toHaveTextContent('results');
 
       // Try to go beyond results
-      act(() => {
+      await act(async () => {
         fireEvent.click(screen.getByTestId('go-next'));
       });
       expect(screen.getByTestId('current-step')).toHaveTextContent('results');
@@ -294,7 +294,7 @@ describe('WizardProvider', () => {
         return (
           <button
             data-testid="set-form-state"
-            onClick={() => setFormState({ ...formState, projectType: 'ongoing' })}
+            onClick={() => setFormState(prevState => ({ ...prevState, projectType: 'ongoing' }))}
           >
             Set Form State
           </button>
@@ -394,10 +394,12 @@ describe('WizardProvider', () => {
       );
     });
 
-    it('should save form state to localStorage', () => {
+    it('should save form state immediately when navigating', () => {
       renderWithProvider();
 
-      // Form state changes would trigger localStorage save
+      // Navigation should trigger immediate form state save
+      fireEvent.click(screen.getByTestId('go-to-usecase'));
+
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
         'agentic-cost-calculator-form-state',
         expect.any(String)
@@ -479,17 +481,20 @@ describe('WizardProvider', () => {
   });
 
   describe('Step Order Validation', () => {
-    it('should follow correct step order', () => {
+    it('should follow correct step order', async () => {
       renderWithProvider();
 
       const expectedSteps = ['welcome', 'usecase', 'template', 'model', 'parameters', 'review', 'results'];
 
-      expectedSteps.forEach((step, index) => {
+      for (let index = 0; index < expectedSteps.length; index++) {
+        const step = expectedSteps[index];
         if (index > 0) {
-          fireEvent.click(screen.getByTestId('go-next'));
+          await act(async () => {
+            fireEvent.click(screen.getByTestId('go-next'));
+          });
         }
         expect(screen.getByTestId('current-step')).toHaveTextContent(step);
-      });
+      }
     });
   });
 });

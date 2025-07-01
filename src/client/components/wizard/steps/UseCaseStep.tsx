@@ -6,10 +6,10 @@ export const UseCaseStep: React.FC = () => {
   const { formState, setFormState, markStepComplete, goToNextStep } = useWizard();
 
   const handleProjectTypeSelect = (projectType: 'oneoff' | 'ongoing' | 'both') => {
-    setFormState({
-      ...formState,
+    setFormState(prevState => ({
+      ...prevState,
       projectType
-    });
+    }));
     markStepComplete('usecase');
     // Auto-advance after selection
     setTimeout(() => {

@@ -17,6 +17,17 @@ interface WizardProps {
 const WizardContent: React.FC<WizardProps> = ({ useWizard: useWizardMode, setUseWizard }) => {
   const { wizardState, goToStep, goToPreviousStep, canNavigateToStep } = useWizard();
 
+  // Memoize step components to prevent recreation on every render
+  const stepComponents = React.useMemo(() => ({
+    welcome: <WelcomeStep />,
+    usecase: <UseCaseStep />,
+    template: <TemplateStep />,
+    model: <ModelStep />,
+    parameters: <ParametersStep />,
+    review: <ReviewStep />,
+    results: <ResultsStep />
+  }), []);
+
   // Browser navigation support
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
@@ -68,24 +79,7 @@ const WizardContent: React.FC<WizardProps> = ({ useWizard: useWizardMode, setUse
   }, [goToPreviousStep]);
 
   const renderCurrentStep = () => {
-    switch (wizardState.currentStep) {
-      case 'welcome':
-        return <WelcomeStep />;
-      case 'usecase':
-        return <UseCaseStep />;
-      case 'template':
-        return <TemplateStep />;
-      case 'model':
-        return <ModelStep />;
-      case 'parameters':
-        return <ParametersStep />;
-      case 'review':
-        return <ReviewStep />;
-      case 'results':
-        return <ResultsStep />;
-      default:
-        return <WelcomeStep />;
-    }
+    return stepComponents[wizardState.currentStep] || stepComponents.welcome;
   };
 
   return (
@@ -105,10 +99,14 @@ const WizardContent: React.FC<WizardProps> = ({ useWizard: useWizardMode, setUse
   );
 };
 
+const WizardWrapper: React.FC<WizardProps> = React.memo(({ useWizard, setUseWizard }) => {
+  return <WizardContent useWizard={useWizard} setUseWizard={setUseWizard} />;
+});
+
 export const Wizard: React.FC<WizardProps> = ({ useWizard, setUseWizard }) => {
   return (
     <WizardProvider>
-      <WizardContent useWizard={useWizard} setUseWizard={setUseWizard} />
+      <WizardWrapper useWizard={useWizard} setUseWizard={setUseWizard} />
     </WizardProvider>
   );
 };

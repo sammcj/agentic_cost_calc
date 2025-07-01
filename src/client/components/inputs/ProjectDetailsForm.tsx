@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormSection } from './FormSection';
 import { FormGroup } from './FormGroup';
+import { UncontrolledTextInput } from './UncontrolledTextInput';
 import { GlobalParameters } from '@/shared/types/models';
 
 interface ProjectDetailsFormProps {
@@ -8,68 +9,49 @@ interface ProjectDetailsFormProps {
   onChange: (value: Partial<GlobalParameters>) => void;
 }
 
-export const ProjectDetailsForm: React.FC<ProjectDetailsFormProps> = ({
+export const ProjectDetailsForm: React.FC<ProjectDetailsFormProps> = React.memo(({
   value,
   onChange
 }) => {
-  const handleInputChange = (field: keyof GlobalParameters) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputBlur = (field: keyof GlobalParameters) => (newValue: string) => {
     onChange({
       ...value,
-      [field]: e.target.value
+      [field]: newValue
     });
   };
 
   return (
     <FormSection title="Project Details (Optional)">
-      <FormGroup
-        label="Client Name"
-        id="customerName"
-        required={false}
-      >
-        <input
-          type="text"
+      <div className="space-y-4">
+        <UncontrolledTextInput
           id="customerName"
-          className="form-input block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          label="Client Name"
           value={value.customerName || ''}
-          onChange={handleInputChange('customerName')}
+          onBlur={handleInputBlur('customerName')}
           placeholder="Enter client name"
         />
-      </FormGroup>
 
-      <FormGroup
-        label="Project Name"
-        id="projectName"
-        required={false}
-      >
-        <input
-          type="text"
+        <UncontrolledTextInput
           id="projectName"
-          className="form-input block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          label="Project Name"
           value={value.projectName || ''}
-          onChange={handleInputChange('projectName')}
+          onBlur={handleInputBlur('projectName')}
           placeholder="Enter project name"
         />
-      </FormGroup>
 
-      <FormGroup
-        label="Project Description"
-        id="projectDescription"
-        required={false}
-        hint="Supports Markdown formatting"
-      >
-        <textarea
+        <UncontrolledTextInput
           id="projectDescription"
-          className="form-textarea block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          label="Project Description"
           value={value.projectDescription || ''}
-          onChange={handleInputChange('projectDescription')}
+          onBlur={handleInputBlur('projectDescription')}
           placeholder="Enter project description (Markdown supported)"
+          multiline={true}
           rows={4}
+          description="Supports Markdown formatting"
         />
-      </FormGroup>
+      </div>
     </FormSection>
   );
-};
+});
 
 export default ProjectDetailsForm;

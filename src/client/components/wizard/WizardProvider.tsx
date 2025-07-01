@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useCallback, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useCallback, useState, ReactNode, useEffect, useRef } from 'react';
 import { useCalculatorForm } from '../../hooks/useCalculatorForm';
 import { CalculationFormState } from '@/shared/types/models';
 
@@ -30,7 +30,7 @@ interface WizardContextValue {
 
   // Form state (from useCalculatorForm)
   formState: CalculationFormState;
-  setFormState: (state: CalculationFormState) => void;
+  setFormState: (state: CalculationFormState | ((prev: CalculationFormState) => CalculationFormState)) => void;
   errors: Record<string, string>;
   isCalculating: boolean;
   isValid: boolean;
@@ -92,7 +92,9 @@ const clearLocalStorage = () => {
 };
 
 export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
+  console.log(`🧙 WizardProvider RENDER`);
   const calculatorForm = useCalculatorForm();
+
 
   // Initialize wizard state with persistence
   const [wizardState, setWizardState] = useState<WizardState>(() => {
@@ -119,8 +121,8 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
     saveToLocalStorage(WIZARD_STORAGE_KEY, stateToSave);
   }, [wizardState]);
 
-  // Save form state to localStorage whenever it changes
-  useEffect(() => {
+  // Function to save form state immediately (called on navigation events)
+  const saveFormStateImmediately = useCallback(() => {
     saveToLocalStorage(FORM_STORAGE_KEY, calculatorForm.formState);
   }, [calculatorForm.formState]);
 
@@ -130,25 +132,69 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
     if (savedFormState) {
       calculatorForm.setFormState(savedFormState);
     }
-  }, []);
+  }, [calculatorForm.setFormState]);
 
-  const goToStep = useCallback((step: WizardStep) => {
+  // Add browser refresh/close protection to save state
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      saveFormStateImmediately();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [saveFormStateImmediately]);
+
+  const goToStep = useCallback(async (step: WizardStep) => {
+    // Save form state immediately when navigating
+    saveFormStateImmediately();
+
+    // If navigating to results step, trigger calculation first
+    if (step === 'results' && !calculatorForm.result) {
+      try {
+        await calculatorForm.handleCalculate();
+      } catch (error) {
+        console.error('Calculation failed when navigating to results:', error);
+      }
+    }
+
     setWizardState(prev => ({
       ...prev,
       currentStep: step,
       navigationHistory: [...prev.navigationHistory, step]
     }));
-  }, []);
+  }, [saveFormStateImmediately, calculatorForm]);
 
-  const goToNextStep = useCallback(() => {
+  const goToNextStep = useCallback(async () => {
+    // Save form state immediately when going to next step
+    saveFormStateImmediately();
+
     const currentIndex = stepOrder.indexOf(wizardState.currentStep);
     if (currentIndex < stepOrder.length - 1) {
       const nextStep = stepOrder[currentIndex + 1];
-      goToStep(nextStep);
+
+      // If navigating to results step, trigger calculation first
+      if (nextStep === 'results' && !calculatorForm.result) {
+        try {
+          await calculatorForm.handleCalculate();
+        } catch (error) {
+          console.error('Calculation failed when navigating to results:', error);
+        }
+      }
+
+      setWizardState(prev => ({
+        ...prev,
+        currentStep: nextStep,
+        navigationHistory: [...prev.navigationHistory, nextStep]
+      }));
     }
-  }, [wizardState.currentStep, goToStep]);
+  }, [wizardState.currentStep, saveFormStateImmediately, calculatorForm]);
 
   const goToPreviousStep = useCallback(() => {
+    // Save form state immediately when going to previous step
+    saveFormStateImmediately();
+
     const history = wizardState.navigationHistory;
     if (history.length > 1) {
       // Remove current step and go to previous
@@ -161,7 +207,7 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
         navigationHistory: newHistory
       }));
     }
-  }, [wizardState.navigationHistory]);
+  }, [wizardState.navigationHistory, saveFormStateImmediately]);
 
   const markStepComplete = useCallback((step: WizardStep) => {
     setWizardState(prev => ({

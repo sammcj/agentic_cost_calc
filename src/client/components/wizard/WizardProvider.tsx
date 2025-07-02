@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useCallback, useState, ReactNode, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useCallback, useState, ReactNode, useEffect, useRef, useMemo } from 'react';
 import { useCalculatorForm } from '../../hooks/useCalculatorForm';
 import { CalculationFormState } from '@/shared/types/models';
 
@@ -311,7 +311,7 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
   }, [calculatorForm]);
 
   // Enhanced handleCalculate that navigates to results on success
-  const handleCalculateWithNavigation = async () => {
+  const handleCalculateWithNavigation = useCallback(async () => {
     try {
       await calculatorForm.handleCalculate();
       // If calculation was successful and we have a result, go to results step
@@ -323,7 +323,7 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
       // Handle error - stay on current step
       console.error('Calculation failed:', error);
     }
-  };
+  }, [calculatorForm.handleCalculate, calculatorForm.result, markStepComplete, goToStep]);
 
   // Start over function that resets everything
   const startOver = useCallback(() => {
@@ -341,7 +341,7 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
     });
   }, [calculatorForm.resetForm]);
 
-  const contextValue: WizardContextValue = {
+  const contextValue: WizardContextValue = useMemo(() => ({
     wizardState,
     goToStep,
     goToNextStep,
@@ -351,9 +351,33 @@ export const WizardProvider: React.FC<WizardProviderProps> = ({ children }) => {
     isStepValid,
     getStepErrors,
     startOver,
-    ...calculatorForm,
+    formState: calculatorForm.formState,
+    setFormState: calculatorForm.setFormState,
+    errors: calculatorForm.errors,
+    isCalculating: calculatorForm.isCalculating,
+    isValid: calculatorForm.isValid,
+    result: calculatorForm.result,
+    resetForm: calculatorForm.resetForm,
     handleCalculate: handleCalculateWithNavigation
-  };
+  }), [
+    wizardState,
+    goToStep,
+    goToNextStep,
+    goToPreviousStep,
+    markStepComplete,
+    canNavigateToStep,
+    isStepValid,
+    getStepErrors,
+    startOver,
+    calculatorForm.formState,
+    calculatorForm.setFormState,
+    calculatorForm.errors,
+    calculatorForm.isCalculating,
+    calculatorForm.isValid,
+    calculatorForm.result,
+    calculatorForm.resetForm,
+    handleCalculateWithNavigation
+  ]);
 
   return (
     <WizardContext.Provider value={contextValue}>

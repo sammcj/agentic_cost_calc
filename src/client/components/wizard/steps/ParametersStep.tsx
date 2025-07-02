@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { useWizard } from '../WizardProvider';
 import { WizardStep } from '../WizardStep';
 import { ParameterSection } from './ParameterSection';
@@ -151,7 +151,7 @@ export const ParametersStep: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <TextInput
-              key={`project-name-${formState.globalParams?.projectName || 'empty'}`}
+              key="project-name"
               label="Project Name"
               value={formState.globalParams?.projectName}
               onChange={(v) => handleProjectDetailsChange({ projectName: v })}
@@ -160,7 +160,7 @@ export const ParametersStep: React.FC = () => {
           </div>
           <div>
             <TextInput
-              key={`customer-name-${formState.globalParams?.customerName || 'empty'}`}
+              key="customer-name"
               label="Customer/Team Name"
               value={formState.globalParams?.customerName}
               onChange={(v) => handleProjectDetailsChange({ customerName: v })}
@@ -170,7 +170,7 @@ export const ParametersStep: React.FC = () => {
         </div>
         <div>
           <TextInput
-            key={`project-description-${formState.globalParams?.projectDescription || 'empty'}`}
+            key="project-description"
             label="Project Description"
             value={formState.globalParams?.projectDescription}
             onChange={(v) => handleProjectDetailsChange({ projectDescription: v })}
@@ -282,7 +282,7 @@ export const ParametersStep: React.FC = () => {
     handleTeamParamsChange
   ]);
 
-  const AdvancedProjectSection = () => (
+  const advancedProjectSection = useMemo(() => (
     <ParameterSection
       id="advanced-project"
       title="Advanced Project Settings"
@@ -296,9 +296,9 @@ export const ParametersStep: React.FC = () => {
         formState={formState}
       />
     </ParameterSection>
-  );
+  ), [expandedSections, formState.projectParams, handleProjectParamsChange, formState]);
 
-  const TeamParametersSection = () => (
+  const teamParametersSection = useMemo(() => (
     <ParameterSection
       id="team-advanced"
       title="Advanced Team Settings"
@@ -312,9 +312,9 @@ export const ParametersStep: React.FC = () => {
         formState={formState}
       />
     </ParameterSection>
-  );
+  ), [expandedSections, formState.teamParams, handleTeamParamsChange, formState]);
 
-  const ProductParametersSection = () => (
+  const productParametersSection = useMemo(() => (
     <ParameterSection
       id="product-advanced"
       title="Product Integration Settings"
@@ -328,9 +328,9 @@ export const ParametersStep: React.FC = () => {
         formState={formState}
       />
     </ParameterSection>
-  );
+  ), [expandedSections, formState.productParams, handleProductParamsChange, formState]);
 
-  const GlobalParametersSection = () => (
+  const globalParametersSection = useMemo(() => (
     <ParameterSection
       id="global-advanced"
       title="Global Calculation Settings"
@@ -343,7 +343,7 @@ export const ParametersStep: React.FC = () => {
         onChange={handleGlobalParamsChange}
       />
     </ParameterSection>
-  );
+  ), [expandedSections, formState.globalParams, handleGlobalParamsChange]);
 
   const renderParameterSections = () => {
     const sections = [];
@@ -365,21 +365,21 @@ export const ParametersStep: React.FC = () => {
 
     // Advanced project parameters for one-off projects and both
     if (formState.projectType === 'oneoff' || formState.projectType === 'both') {
-      sections.push(<AdvancedProjectSection key="advanced-project" />);
+      sections.push(<React.Fragment key="advanced-project">{advancedProjectSection}</React.Fragment>);
     }
 
     // Advanced team parameters for ongoing and both projects
     if (formState.projectType === 'ongoing' || formState.projectType === 'both') {
-      sections.push(<TeamParametersSection key="team-advanced" />);
+      sections.push(<React.Fragment key="team-advanced">{teamParametersSection}</React.Fragment>);
     }
 
     // Product parameters for ongoing and both projects
     if (formState.projectType === 'ongoing' || formState.projectType === 'both') {
-      sections.push(<ProductParametersSection key="product-advanced" />);
+      sections.push(<React.Fragment key="product-advanced">{productParametersSection}</React.Fragment>);
     }
 
     // Global parameters last
-    sections.push(<GlobalParametersSection key="global-advanced" />);
+    sections.push(<React.Fragment key="global-advanced">{globalParametersSection}</React.Fragment>);
 
     return sections;
   };

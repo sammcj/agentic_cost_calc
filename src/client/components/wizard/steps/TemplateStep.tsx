@@ -39,12 +39,12 @@ export const TemplateStep: React.FC = () => {
 
   const handleTemplateSelect = (template: Template) => {
     // Apply template defaults to form state
-    setFormState({
-      ...formState,
+    setFormState(prevState => ({
+      ...prevState,
       ...template.defaultValues,
       // Preserve the user's project type selection
-      projectType: formState.projectType
-    });
+      projectType: prevState.projectType
+    }));
 
     markStepComplete('template');
     goToNextStep();

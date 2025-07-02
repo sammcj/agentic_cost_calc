@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useLocalStorage } from './useLocalStorage';
 import { CalculationFormState, CalculationResult } from '@/shared/types/models';
 import { modelConfig } from '@/shared/utils/modelConfig';
 import { getTemplateById } from '@/shared/utils/projectTemplates';
@@ -7,7 +6,7 @@ import { calculateCosts } from '@/shared/utils/calculations';
 
 interface UseCalculatorForm {
   formState: CalculationFormState;
-  setFormState: (state: CalculationFormState) => void;
+  setFormState: (state: CalculationFormState | ((prev: CalculationFormState) => CalculationFormState)) => void;
   errors: Record<string, string>;
   isCalculating: boolean;
   isValid: boolean;
@@ -20,34 +19,18 @@ const initialState: CalculationFormState = {
   ...getTemplateById('medium-project').defaultValues
 };
 
-// Debounce utility
-const useDebounce = <T>(value: T, delay: number): T => {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-};
 
 export const useCalculatorForm = (): UseCalculatorForm => {
-  const [formState, setFormState] = useLocalStorage<CalculationFormState>('calculator_form', initialState);
-  const [errors, setErrors] = useLocalStorage<Record<string, string>>('calculator_errors', {});
-  const [isCalculating, setIsCalculating] = useLocalStorage<boolean>('calculator_calculating', false);
-  const [result, setResult] = useLocalStorage<CalculationResult | null>('calculator_result', null);
+  const [formState, setFormState] = useState<CalculationFormState>(initialState);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isCalculating, setIsCalculating] = useState<boolean>(false);
+  const [result, setResult] = useState<CalculationResult | null>(null);
+
 
   // Prevent calculation on initial mount
   const isInitialMount = useRef(true);
-
-  // Debounce form state changes
-  const debouncedFormState = useDebounce(formState, 750);
 
   const validateForm = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
@@ -201,7 +184,7 @@ export const useCalculatorForm = (): UseCalculatorForm => {
 
   // Create a memoized dependency object containing only calculation-relevant fields
   const calculationDependencies = useMemo(() => {
-    const { globalParams, ...restOfState } = debouncedFormState;
+    const { globalParams, ...restOfState } = formState;
     // Omit informational fields from globalParams
     const {
       customerName: _customerName,
@@ -215,24 +198,34 @@ export const useCalculatorForm = (): UseCalculatorForm => {
       ...restOfState,
       globalParams: relevantGlobalParams,
     };
-    // Use JSON.stringify for deep comparison of the dependency object
-  }, [JSON.stringify(debouncedFormState)]);
+  }, [
+    formState.projectType,
+    formState.modelConfig,
+    formState.projectParams,
+    formState.teamParams,
+    formState.productParams,
+    formState.globalParams?.currencyRate,
+    formState.globalParams?.aiCapabilityFactor,
+    formState.globalParams?.totalCostMultiplier
+  ]);
 
 
   // Auto-calculate when calculation-relevant form state changes (after debounce)
-  useEffect(() => {
-    // Skip calculation on initial mount
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
+  // DISABLED: This was causing input focus loss due to frequent re-renders
+  // Users can manually calculate by clicking the calculate button or navigating to results
+  // useEffect(() => {
+  //   // Skip calculation on initial mount
+  //   if (isInitialMount.current) {
+  //     isInitialMount.current = false;
+  //     return;
+  //   }
 
-    // Only calculate if we have a project type
-    if (calculationDependencies.projectType) {
-      handleCalculate();
-    }
-    // Depend on the memoized object containing only relevant fields
-  }, [calculationDependencies, handleCalculate]);
+  //   // Only calculate if we have a project type
+  //   if (calculationDependencies.projectType) {
+  //     handleCalculate();
+  //   }
+  //   // Depend on the memoized object containing only relevant fields
+  // }, [calculationDependencies, handleCalculate]);
 
   return {
     formState,

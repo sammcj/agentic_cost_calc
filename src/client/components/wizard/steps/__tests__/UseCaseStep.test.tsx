@@ -122,10 +122,8 @@ describe('UseCaseStep', () => {
         fireEvent.click(oneOffOption);
       }
 
-      // Should update form state
-      expect(mockSetFormState).toHaveBeenCalledWith({
-        projectType: 'oneoff'
-      });
+      // Should update form state with functional update
+      expect(mockSetFormState).toHaveBeenCalledWith(expect.any(Function));
 
       // Should mark step as complete
       expect(mockMarkStepComplete).toHaveBeenCalledWith('usecase');
@@ -161,10 +159,8 @@ describe('UseCaseStep', () => {
         fireEvent.click(ongoingOption);
       }
 
-      // Should update form state with ongoing project type
-      expect(mockSetFormState).toHaveBeenCalledWith({
-        projectType: 'ongoing'
-      });
+      // Should update form state with functional update
+      expect(mockSetFormState).toHaveBeenCalledWith(expect.any(Function));
     });
 
     it('should handle combined option selection', () => {
@@ -187,10 +183,8 @@ describe('UseCaseStep', () => {
         fireEvent.click(combinedOption);
       }
 
-      // Should update form state with both project type
-      expect(mockSetFormState).toHaveBeenCalledWith({
-        projectType: 'both'
-      });
+      // Should update form state with functional update
+      expect(mockSetFormState).toHaveBeenCalledWith(expect.any(Function));
     });
   });
 

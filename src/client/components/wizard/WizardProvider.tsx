@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useCallback, useState, ReactNode, useEffect, useRef, useMemo } from 'react';
+import React, { createContext, useContext, useCallback, useState, ReactNode, useEffect, useMemo } from 'react';
 import { useCalculatorForm } from '../../hooks/useCalculatorForm';
 import { CalculationFormState } from '@/shared/types/models';
 

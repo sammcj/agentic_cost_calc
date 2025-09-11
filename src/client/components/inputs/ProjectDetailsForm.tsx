@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormSection } from './FormSection';
-import { FormGroup } from './FormGroup';
+
 import { UncontrolledTextInput } from './UncontrolledTextInput';
 import { GlobalParameters } from '@/shared/types/models';
 

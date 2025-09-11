@@ -38,7 +38,7 @@ export const TextInput: React.FC<TextInputProps> = ({
     onChange(e.target.value);
   };
 
-  const handleFocus = (e: React.FocusEvent) => {
+  const handleFocus = () => {
     console.log(`🎯 TextInput FOCUS - id: ${id}, label: "${label}"`);
   };
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { CalculationFormState, CalculationResult } from '@/shared/types/models';
 import { modelConfig } from '@/shared/utils/modelConfig';
 import { getTemplateById } from '@/shared/utils/projectTemplates';
@@ -29,8 +29,7 @@ export const useCalculatorForm = (): UseCalculatorForm => {
   const [result, setResult] = useState<CalculationResult | null>(null);
 
 
-  // Prevent calculation on initial mount
-  const isInitialMount = useRef(true);
+
 
   const validateForm = useCallback((): boolean => {
     const newErrors: Record<string, string> = {};
@@ -182,32 +181,7 @@ export const useCalculatorForm = (): UseCalculatorForm => {
     setResult(null);
   }, []);
 
-  // Create a memoized dependency object containing only calculation-relevant fields
-  const calculationDependencies = useMemo(() => {
-    const { globalParams, ...restOfState } = formState;
-    // Omit informational fields from globalParams
-    const {
-      customerName: _customerName,
-      projectName: _projectName,
-      projectDescription: _projectDescription,
-      disclaimerText: _disclaimerText,
-      ...relevantGlobalParams
-    } = globalParams || {};
 
-    return {
-      ...restOfState,
-      globalParams: relevantGlobalParams,
-    };
-  }, [
-    formState.projectType,
-    formState.modelConfig,
-    formState.projectParams,
-    formState.teamParams,
-    formState.productParams,
-    formState.globalParams?.currencyRate,
-    formState.globalParams?.aiCapabilityFactor,
-    formState.globalParams?.totalCostMultiplier
-  ]);
 
 
   // Auto-calculate when calculation-relevant form state changes (after debounce)

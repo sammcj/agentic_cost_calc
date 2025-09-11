@@ -37,7 +37,7 @@ jest.mock('../../../hooks/useCalculatorForm', () => ({
 
 // Test component that uses the wizard context
 const TestComponent: React.FC = () => {
-  const { formState, setFormState, goToNextStep } = useWizard();
+  const { setFormState, goToNextStep } = useWizard();
 
   return (
     <div>

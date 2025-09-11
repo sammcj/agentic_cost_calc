@@ -290,7 +290,7 @@ describe('WizardProvider', () => {
 
     it('should provide setFormState function', () => {
       const TestSetFormComponent = () => {
-        const { setFormState, formState } = useWizard();
+        const { setFormState } = useWizard();
         return (
           <button
             data-testid="set-form-state"

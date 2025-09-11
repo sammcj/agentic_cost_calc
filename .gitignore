@@ -36,3 +36,5 @@ pnpm-debug.log*
 
 .bevel
 TROUBLESHOOTING.md
+.serena/cache/
+.serena/memories/
